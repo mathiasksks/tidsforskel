@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tidsstempel Differens (Systemtid - Realtid + Interessepunkt)</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #fafafd;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .section {
+      margin-bottom: 18px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+    }
+    input[type="datetime-local"] {
+      width: 100%;
+      margin: 6px 0 10px 0;
+      padding: 6px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+    .result-line {
+      background: #fff0f0;
+      color: #c00;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+    .result-label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Tidsstempel Differens</h2>
+  <div class="section">
+    <label for="realtid">Realtid</label>
+    <input type="datetime-local" id="realtid" step="1">
+  </div>
+  <div class="section">
+    <label for="systemtid">Systemtid</label>
+    <input type="datetime-local" id="systemtid" step="1">
+  </div>
+  <div id="diff" class="result-line"></div>
+  <div class="section">
+    <label for="interessepunkt">Interessepunkt (realtid)</label>
+    <input type="datetime-local" id="interessepunkt" step="1">
+  </div>
+  <div id="interessepunkt-timestamp" class="result-line"></div>
+  <script src="app.js"></script>
+</body>
+</html>
