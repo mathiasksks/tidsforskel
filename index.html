@@ -23,7 +23,7 @@
       font-weight: bold;
       display: block;
     }
-    input[type="datetime-local"] {
+    input[type="datetime-local"], input[type="number"] {
       width: 100%;
       margin: 6px 0 10px 0;
       padding: 6px;
@@ -46,22 +46,47 @@
       display: block;
       margin-bottom: 4px;
     }
+    .seconds-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .seconds-row label {
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+    .seconds-row input[type="number"] {
+      width: 60px;
+      padding: 6px;
+    }
   </style>
 </head>
 <body>
   <h2>Tidsstempel Differens</h2>
   <div class="section">
     <label for="realtid">Realtid</label>
-    <input type="datetime-local" id="realtid" step="1">
+    <div class="seconds-row">
+      <input type="datetime-local" id="realtid-dt">
+      <label for="realtid-sec">Sekunder:</label>
+      <input type="number" id="realtid-sec" min="0" max="59" value="0">
+    </div>
   </div>
   <div class="section">
     <label for="systemtid">Systemtid</label>
-    <input type="datetime-local" id="systemtid" step="1">
+    <div class="seconds-row">
+      <input type="datetime-local" id="systemtid-dt">
+      <label for="systemtid-sec">Sekunder:</label>
+      <input type="number" id="systemtid-sec" min="0" max="59" value="0">
+    </div>
   </div>
   <div id="diff" class="result-line"></div>
   <div class="section">
     <label for="interessepunkt">Interessepunkt (realtid)</label>
-    <input type="datetime-local" id="interessepunkt" step="1">
+    <div class="seconds-row">
+      <input type="datetime-local" id="interessepunkt-dt">
+      <label for="interessepunkt-sec">Sekunder:</label>
+      <input type="number" id="interessepunkt-sec" min="0" max="59" value="0">
+    </div>
   </div>
   <div id="interessepunkt-timestamp" class="result-line"></div>
   <script src="app.js"></script>
