@@ -1,23 +1,25 @@
 function pad(n) { return n < 10 ? "0" + n : n; }
 
-function isoLocalWithSeconds(date, offset) {
-  var localDate = new Date(date.getTime() + offset * 60 * 60 * 1000);
-  return (
-    localDate.getFullYear() +
-    "-" + pad(localDate.getMonth() + 1) +
-    "-" + pad(localDate.getDate()) +
-    "T" + pad(localDate.getHours()) +
-    ":" + pad(localDate.getMinutes()) +
-    ":" + pad(localDate.getSeconds())
+// Parse dd-mm-yyyy hh:mm:ss string to Date object (local time)
+function parseCustomTimestamp(str) {
+  // Match dd-mm-yyyy hh:mm:ss
+  const match = str.match(/^(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  // JS months are 0-based
+  const [_, dd, mm, yyyy, hh, min, ss] = match;
+  return new Date(
+    Number(yyyy),
+    Number(mm) - 1,
+    Number(dd),
+    Number(hh),
+    Number(min),
+    Number(ss)
   );
 }
 
-function fromLocalInputValue(value, offset) {
-  var localDate = new Date(value);
-  return new Date(localDate.getTime() - offset * 60 * 60 * 1000);
-}
-
-function formatDiff(ms) {
+function formatDiff(dateA, dateB) {
+  if (!dateA || !dateB) return "Ugyldigt input";
+  var ms = dateA - dateB;
   var absMs = Math.abs(ms), sign = ms >= 0 ? "" : "-";
   var hours = Math.floor(absMs / 3600000),
       minutes = Math.floor((absMs % 3600000) / 60000),
@@ -25,52 +27,46 @@ function formatDiff(ms) {
   return sign + hours + "h " + minutes + "m " + seconds + "s";
 }
 
-function formatDisplayDateDDMMYYYY(date, offset) {
-  var localDate = new Date(date.getTime() + offset * 60 * 60 * 1000);
+function formatDisplayDateDDMMYYYY(date) {
+  if (!date) return "Ugyldigt input";
   return (
-    pad(localDate.getDate()) + "-" +
-    pad(localDate.getMonth() + 1) + "-" +
-    localDate.getFullYear() + " " +
-    pad(localDate.getHours()) + ":" +
-    pad(localDate.getMinutes()) + ":" +
-    pad(localDate.getSeconds())
+    pad(date.getDate()) + "-" +
+    pad(date.getMonth() + 1) + "-" +
+    date.getFullYear() + " " +
+    pad(date.getHours()) + ":" +
+    pad(date.getMinutes()) + ":" +
+    pad(date.getSeconds())
   );
 }
 
 window.addEventListener('DOMContentLoaded', function () {
-  var now = new Date(), defaultOffset = getDenmarkOffset(now);
-  var realtidInput = document.getElementById('realtid-dt'),
-      systemtidInput = document.getElementById('systemtid-dt'),
-      interessepunktInput = document.getElementById('interessepunkt-dt'),
+  var now = new Date();
+  function getNowString() {
+    return pad(now.getDate()) + "-" + pad(now.getMonth() + 1) + "-" + now.getFullYear() +
+      " " + pad(now.getHours()) + ":" + pad(now.getMinutes()) + ":" + pad(now.getSeconds());
+  }
+
+  var realtidInput = document.getElementById('realtid-txt'),
+      systemtidInput = document.getElementById('systemtid-txt'),
+      interessepunktInput = document.getElementById('interessepunkt-txt'),
       diffDiv = document.getElementById('diff'),
       interessepunktTimestampDiv = document.getElementById('interessepunkt-timestamp');
 
-  // Set initial values (seconds included)
-  function setInitialDateTime(input) {
-    input.value = isoLocalWithSeconds(now, defaultOffset);
-  }
-  setInitialDateTime(realtidInput);
-  setInitialDateTime(systemtidInput);
-  setInitialDateTime(interessepunktInput);
+  // Set initial values to now
+  realtidInput.value = getNowString();
+  systemtidInput.value = getNowString();
+  interessepunktInput.value = getNowString();
 
   function updateDiffs() {
-    var rTime = realtidInput.value,
-        sTime = systemtidInput.value,
-        iTime = interessepunktInput.value;
+    var rDate = parseCustomTimestamp(realtidInput.value),
+        sDate = parseCustomTimestamp(systemtidInput.value),
+        iDate = parseCustomTimestamp(interessepunktInput.value);
 
-    var rOffset = getDenmarkOffset(new Date(rTime)),
-        sOffset = getDenmarkOffset(new Date(sTime));
-
-    var rDate = fromLocalInputValue(rTime, rOffset),
-        sDate = fromLocalInputValue(sTime, sOffset),
-        iDate = fromLocalInputValue(iTime, rOffset);
-
-    var diff = sDate - rDate;
-    diffDiv.textContent = "Systemtid - Realtid: " + formatDiff(diff);
+    diffDiv.textContent = "Systemtid - Realtid: " + formatDiff(sDate, rDate);
 
     interessepunktTimestampDiv.textContent =
       "Interessepunkt (DD-MM-YYYY HH:mm:ss): " +
-      formatDisplayDateDDMMYYYY(iDate, rOffset);
+      formatDisplayDateDDMMYYYY(iDate);
   }
 
   realtidInput.addEventListener('input', updateDiffs);
@@ -79,5 +75,3 @@ window.addEventListener('DOMContentLoaded', function () {
 
   updateDiffs();
 });
-
-// You still need to define getDenmarkOffset as before
