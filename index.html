@@ -23,12 +23,13 @@
       font-weight: bold;
       display: block;
     }
-    input[type="datetime-local"] {
+    input[type="text"] {
       width: 100%;
       margin: 6px 0 10px 0;
       padding: 6px;
       font-size: 1em;
       box-sizing: border-box;
+      font-family: monospace;
     }
     .result-line {
       background: #fff0f0;
@@ -46,22 +47,29 @@
       display: block;
       margin-bottom: 4px;
     }
+    .format-hint {
+      font-size: 0.95em;
+      color: #666;
+    }
   </style>
 </head>
 <body>
   <h2>Tidsstempel Differens</h2>
   <div class="section">
     <label for="realtid">Realtid</label>
-    <input type="datetime-local" id="realtid-dt" step="1">
+    <span class="format-hint">Format: dd-mm-yyyy hh:mm:ss</span>
+    <input type="text" id="realtid-txt" placeholder="23-07-2025 19:11:50">
   </div>
   <div class="section">
     <label for="systemtid">Systemtid</label>
-    <input type="datetime-local" id="systemtid-dt" step="1">
+    <span class="format-hint">Format: dd-mm-yyyy hh:mm:ss</span>
+    <input type="text" id="systemtid-txt" placeholder="23-07-2025 19:11:50">
   </div>
   <div id="diff" class="result-line"></div>
   <div class="section">
     <label for="interessepunkt">Interessepunkt (realtid)</label>
-    <input type="datetime-local" id="interessepunkt-dt" step="1">
+    <span class="format-hint">Format: dd-mm-yyyy hh:mm:ss</span>
+    <input type="text" id="interessepunkt-txt" placeholder="23-07-2025 19:11:50">
   </div>
   <div id="interessepunkt-timestamp" class="result-line"></div>
   <script src="app.js"></script>
